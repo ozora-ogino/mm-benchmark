@@ -1,7 +1,7 @@
 _base_ = [
     "/mmsegmentation/configs/_base_/models/upernet_convnext.py",
     "/mmsegmentation/configs/_base_/default_runtime.py",
-    "/mmsegmentation/configs/_base_/schedules/schedule_160k.py",
+    "./schedule.py",
     "./coco_stuff10k.py",
 ]
 crop_size = (512, 512)
@@ -46,6 +46,7 @@ lr_config = dict(
     min_lr=0.0,
     by_epoch=False,
 )
+runner = dict(type='IterBasedRunner', max_iters=20000)
 
 # By default, models are trained on 8 GPUs with 2 images per GPU
 # data = dict(
@@ -55,3 +56,26 @@ lr_config = dict(
 optimizer_config = dict(type="Fp16OptimizerHook", loss_scale="dynamic")
 # fp16 placeholder
 fp16 = dict()
+
+log_config = dict(
+    interval=1,
+    hooks=[
+        dict(type="TextLoggerHook"),
+        dict(
+            type="WandbHookX",
+            init_kwargs={
+                "project": "coco-stuff10k-semseg-benchmark",
+                "tags": ["upernet_convnext", "coco_stuff10k", "upernet"],
+                "name": "upernet_convnext_tiny_fp16",
+                "config": {
+                    "iter": 20000,
+                    "img_size": crop_size,
+                },
+            },
+            interval=1,
+            log_checkpoint=True,
+            log_checkpoint_metadata=True,
+            num_eval_images=50,
+        ),
+    ],
+)

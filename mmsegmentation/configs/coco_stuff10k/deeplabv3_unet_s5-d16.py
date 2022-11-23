@@ -1,7 +1,7 @@
 _base_ = [
     "/mmsegmentation/configs/_base_/models/deeplabv3_unet_s5-d16.py",
     "/mmsegmentation/configs/_base_/default_runtime.py",
-    "/mmsegmentation/configs/_base_/schedules/schedule_40k.py",
+    "./schedule.py",
     "./coco_stuff10k.py",
 ]
 crop_size = (512, 512)
@@ -14,7 +14,7 @@ evaluation = dict(metric="mDice")
 
 
 log_config = dict(
-    interval=50,
+    interval=1,
     hooks=[
         dict(type="TextLoggerHook"),
         dict(
@@ -24,11 +24,11 @@ log_config = dict(
                 "tags": ["unet-d16", "coco_stuff10k"],
                 "name": "deeplabv3_unet_s5-d16",
                 "config": {
-                    "iter": 40000,
+                    "iter": 20000,
                     "img_size": crop_size,
                 },
             },
-            interval=10,
+            interval=1,
             log_checkpoint=True,
             log_checkpoint_metadata=True,
             num_eval_images=50,

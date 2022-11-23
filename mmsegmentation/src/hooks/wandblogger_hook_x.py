@@ -55,3 +55,31 @@ class WandbHookX(MMSegWandbHook):
         print(f"GMACs:{macs / 1e9}  Params(M): {params / 1e6}")
         self.wandb.log({"Params(M)": params / 1e6, "GMACs": macs / 1e9})
         self.wandb.config.update({"max_epochs": runner._max_epochs})
+
+    def _log_ckpt_as_artifact(self, model_path, aliases, metadata=None):
+        """Log model checkpoint as  W&B Artifact.
+        Args:
+            model_path (str): Path of the checkpoint to log.
+            aliases (list): List of the aliases associated with this artifact.
+            metadata (dict, optional): Metadata associated with this artifact.
+        """
+        WANDB_LIMIT_METADATA=100
+        if metadata is not None:
+            metadata = {k:v for i, (k,v) in enumerate(metadata.items()) if i < WANDB_LIMIT_METADATA}
+        model_artifact = self.wandb.Artifact(
+            f'run_{self.wandb.run.id}_model', type='model', metadata=metadata)
+        model_artifact.add_file(model_path)
+        self.wandb.log_artifact(model_artifact, aliases=aliases)
+
+    def _log_eval_table(self, iter):
+        """Log the W&B Tables for model evaluation.
+        The table will be logged multiple times creating new version. Use this
+        to compare models at different intervals interactively.
+        """
+        pred_artifact = self.wandb.Artifact(
+            f'run_{self.wandb.run.id}_pred', type='evaluation')
+        pred_artifact.add(self.eval_table, 'eval_data')
+        self.wandb.run.log_artifact(pred_artifact)
+
+        data = {f"val/{k}":v for k, v in self._get_eval_results().items()}
+        self.wandb.log(data)
