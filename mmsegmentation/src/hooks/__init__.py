@@ -2,4 +2,4 @@
 from .wandblogger_hook import MMSegWandbHook
 from .wandblogger_hook_x import WandbHookX
 
-__all__ = ['MMSegWandbHook', 'WandbHookX']
+__all__ = ["MMSegWandbHook", "WandbHookX"]

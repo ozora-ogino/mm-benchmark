@@ -63,11 +63,16 @@ class WandbHookX(MMSegWandbHook):
             aliases (list): List of the aliases associated with this artifact.
             metadata (dict, optional): Metadata associated with this artifact.
         """
-        WANDB_LIMIT_METADATA=100
+        WANDB_LIMIT_METADATA = 100
         if metadata is not None:
-            metadata = {k:v for i, (k,v) in enumerate(metadata.items()) if i < WANDB_LIMIT_METADATA}
+            metadata = {
+                k: v
+                for i, (k, v) in enumerate(metadata.items())
+                if i < WANDB_LIMIT_METADATA
+            }
         model_artifact = self.wandb.Artifact(
-            f'run_{self.wandb.run.id}_model', type='model', metadata=metadata)
+            f"run_{self.wandb.run.id}_model", type="model", metadata=metadata
+        )
         model_artifact.add_file(model_path)
         self.wandb.log_artifact(model_artifact, aliases=aliases)
 
@@ -77,9 +82,10 @@ class WandbHookX(MMSegWandbHook):
         to compare models at different intervals interactively.
         """
         pred_artifact = self.wandb.Artifact(
-            f'run_{self.wandb.run.id}_pred', type='evaluation')
-        pred_artifact.add(self.eval_table, 'eval_data')
+            f"run_{self.wandb.run.id}_pred", type="evaluation"
+        )
+        pred_artifact.add(self.eval_table, "eval_data")
         self.wandb.run.log_artifact(pred_artifact)
 
-        data = {f"val/{k}":v for k, v in self._get_eval_results().items()}
+        data = {f"val/{k}": v for k, v in self._get_eval_results().items()}
         self.wandb.log(data)

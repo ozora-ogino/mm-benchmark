@@ -22,7 +22,7 @@ log_config = dict(
                 "tags": ["lraspp_m-v3-d8", "coco_stuff10k"],
                 "name": "lraspp_m-v3-d8",
                 "config": {
-                    "iter": 22000,
+                    "iter": 20000,
                     "img_size": (512, 512),
                 },
             },

@@ -46,7 +46,7 @@ lr_config = dict(
     min_lr=0.0,
     by_epoch=False,
 )
-runner = dict(type='IterBasedRunner', max_iters=20000)
+runner = dict(type="IterBasedRunner", max_iters=20000)
 
 # By default, models are trained on 8 GPUs with 2 images per GPU
 # data = dict(
@@ -80,6 +80,6 @@ log_config = dict(
     ],
 )
 
-evaluation = dict(interval=200, metric='mIoU', pre_eval=True)
+evaluation = dict(interval=200, metric="mIoU", pre_eval=True)
 data = dict(samples_per_gpu=8, workers_per_gpu=1)
-runner = dict(type='IterBasedRunner', max_iters=40000)
+runner = dict(type="IterBasedRunner", max_iters=40000)
