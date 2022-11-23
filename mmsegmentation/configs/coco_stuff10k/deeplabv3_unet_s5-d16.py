@@ -10,7 +10,7 @@ model = dict(
     auxiliary_head=dict(num_classes=171),
     test_cfg=dict(crop_size=crop_size, stride=(170, 170)),
 )
-evaluation = dict(metric="mDice")
+evaluation = dict(metric="mIoU")
 
 
 log_config = dict(
@@ -24,7 +24,7 @@ log_config = dict(
                 "tags": ["unet-d16", "coco_stuff10k"],
                 "name": "deeplabv3_unet_s5-d16",
                 "config": {
-                    "iter": 20000,
+                    "iter": 40000,
                     "img_size": crop_size,
                 },
             },
@@ -36,4 +36,6 @@ log_config = dict(
     ],
 )
 
-data = dict(samples_per_gpu=2, workers_per_gpu=1)
+data = dict(samples_per_gpu=8, workers_per_gpu=1)
+evaluation = dict(interval=200, metric="mIoU", pre_eval=True)
+runner = dict(type="IterBasedRunner", max_iters=40000)

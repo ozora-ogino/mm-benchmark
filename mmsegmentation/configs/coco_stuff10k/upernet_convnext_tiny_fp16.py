@@ -20,9 +20,9 @@ model = dict(
     ),
     decode_head=dict(
         in_channels=[96, 192, 384, 768],
-        num_classes=150,
+        num_classes=171,
     ),
-    auxiliary_head=dict(in_channels=384, num_classes=150),
+    auxiliary_head=dict(in_channels=384, num_classes=171),
     test_cfg=dict(mode="slide", crop_size=crop_size, stride=(341, 341)),
 )
 
@@ -68,7 +68,7 @@ log_config = dict(
                 "tags": ["upernet_convnext", "coco_stuff10k", "upernet"],
                 "name": "upernet_convnext_tiny_fp16",
                 "config": {
-                    "iter": 20000,
+                    "iter": 40000,
                     "img_size": crop_size,
                 },
             },
@@ -79,3 +79,7 @@ log_config = dict(
         ),
     ],
 )
+
+evaluation = dict(interval=200, metric='mIoU', pre_eval=True)
+data = dict(samples_per_gpu=8, workers_per_gpu=1)
+runner = dict(type='IterBasedRunner', max_iters=40000)
