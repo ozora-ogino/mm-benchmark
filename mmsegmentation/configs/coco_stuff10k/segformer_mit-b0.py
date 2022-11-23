@@ -44,10 +44,10 @@ log_config = dict(
             type="WandbHookX",
             init_kwargs={
                 "project": "coco-stuff10k-semseg-benchmark",
-                "tags": ["unet-d16", "coco_stuff10k"],
-                "name": "deeplabv3_unet_s5-d16",
+                "tags": ["segformer_mit-b0", "segformer", "coco_stuff10k"],
+                "name": "segformer_mit-b0",
                 "config": {
-                    "iter": 20000,
+                    "iter": 40000,
                     "img_size": (512, 512),
                 },
             },
